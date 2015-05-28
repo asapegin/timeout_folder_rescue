@@ -44,6 +44,8 @@ function copyfile {
     blocks_read=0
     # create destination file
     touch $destfile
+    timeout 10 chmod --reference="$sourcefile" "$destfile"
+    timeout 10 chown --reference="$sourcefile" "$destfile"
     # check the size of source file in bytes
     filesize=$(stat -c%s "$sourcefile")
     # copy until all bytes of file are not copied
@@ -75,7 +77,8 @@ function print_help {
     echo "script skips this file and logs its name. If destination file already exists,"
     echo "script skips file without logging its name."
     echo "Usage:"
-    echo "copy.sh <source_folder> <destination_folder> <log_file>"
+    echo "sudo copy.sh <source_folder> <destination_folder> <log_file>"
+    echo "(sudo could be needed to preserve attributes and ownership)"
 }
 
 ### MAIN ###
@@ -137,14 +140,20 @@ do
     # make destination path, 
     # delete "." in the beginning of filename (from tree)
     dfile=$cdestination${line:1}
+    # If destination directory NOT exists
+    if [ ! -e "$(dirname $dfile)" ]; then
+	# create directory
+	mkdir $(dirname $dfile)
+	timeout 10 chown --reference="$(dirname $sfile)" "$(dirname $dfile)"
+	timeout 10 chmod --reference="$(dirname $sfile)" "$(dirname $dfile)"
+    fi
     # If destination file NOT exists
-    if [ ! -e "$dfile" ]
-    then
-	# create all needed directories in the path to destination
-	mkdir -p $(dirname $dfile)
+    if [ ! -e "$dfile" ]; then
 	# if source is directory, create a directory
 	if [ -d "$sfile" ]; then
 	    mkdir $dfile
+	    timeout 10 chown --reference="$sfile" "$dfile"
+	    timeout 10 chmod --reference="$sfile" "$dfile"
         # otherwise copy file
 	else
 	    # copy file with timeout
