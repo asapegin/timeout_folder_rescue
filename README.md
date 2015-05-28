@@ -2,7 +2,7 @@
 
 <h3>Description</h3>
 
-Bash script, that copies contents of source folder to the destination folder file by file. If copying process for single file hangs for more than 10 seconds, script skips this file and logs its name. If destination file already exists, script skips file without logging its name. Folder structure is recreated according to source tree, however, no files or folders are deleted or owerwritten in destination.
+Bash script, that copies contents of source folder to the destination folder file by file. If copying process for single file hangs for more than 10 seconds, script skips this file and logs its name. If destination file already exists, script skips file without logging its name. Folder structure is recreated according to source tree, however, no files or folders are deleted or overwritten in destination.
 
 <h3>Example use case</h3>
 
