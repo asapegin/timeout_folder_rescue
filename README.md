@@ -8,7 +8,7 @@ Bash script, that copies contents of source folder to the destination folder fil
 
 <h3>Example use case</h3>
 
-I have an encrypted drive, which seems to be failing. If I try to copy files from the mounted encrypted volume, some files are copied just well, but for some other files copy process lasts forever. E.g., Midnight Commander shows that copy is "stalled". Probably because this is encrypted volume, sometimes no I/O error is reported. Of course, one could skip such files manually, but since the drive contains a lot of files, this takes forever as well.
+I have an encrypted drive, which seems to be failing. If I try to copy files from the mounted encrypted volume, some files are copied just well, but for some other files copy process lasts forever. E.g., Midnight Commander shows that copy is "stalled". Probably because this is encrypted volume, sometimes no I/O error is reported. Of course, one could skip such files manually, but since the drive contains a lot of files, this takes forever as well. This script does it automatically.
 
 <h3>How script works in more details</h3>
 
