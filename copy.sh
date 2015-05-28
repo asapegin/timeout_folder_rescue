@@ -149,7 +149,7 @@ do
     fi
     # If destination file NOT exists
     if [ ! -e "$dfile" ]; then
-	# if source is directory, create a directory
+	# if source file is actually a directory, create a directory
 	if [ -d "$sfile" ]; then
 	    mkdir $dfile
 	    timeout 10 chown --reference="$sfile" "$dfile"
