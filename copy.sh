@@ -151,22 +151,21 @@ do
     fi
     # If destination file NOT exists
     if [ ! -e "$dfile" ]; then
-	# if source file is actually a directory
-	if [ -d "$sfile" ]; then
-	    # if it is a symlink to another directory, copy it
-	    if [[ -L "$sfile" ]]; then 
-		cp -r -p -d "$sfile" "$(dirname "$dfile")"
-	    # if not - create a directory
-	    else
+	# if it is a symlink, copy it
+	if [[ -L "$sfile" ]]; then
+	    timeout 10 cp -r -p -d "$sfile" "$(dirname "$dfile")"
+	else
+	    # if source file is actually a directory
+	    if [ -d "$sfile" ]; then
 		mkdir "$dfile"
 		timeout 10 chown --reference="$sfile" "$dfile"
 		timeout 10 chmod --reference="$sfile" "$dfile"
 		timeout 10 touch --reference="$sfile" "$dfile"
+            # otherwise copy file
+	    else
+		# copy file with timeout
+		copyfile "$sfile" "$dfile" "$logfile"
 	    fi
-        # otherwise copy file
-	else
-	    # copy file with timeout
-	    copyfile "$sfile" "$dfile" "$logfile"
 	fi
     fi
 done < "$cdestination/$filetree"
