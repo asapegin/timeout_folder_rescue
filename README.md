@@ -14,7 +14,7 @@ I have an encrypted drive, which seems to be failing. If I try to copy files fro
 
 1. Script builds a tree for source folder and iterates for each line in the 'tree' output.
 2. If the path to file does not exist in destination, it will be created.
-4. Folder attributes and ownership information is copied as well (with 10 seconds timeout).
+4. Folder attributes and ownership information are copied as well (with 10 seconds timeout).
 5. If file already exists, nothing is done, script skips the file
 6. If the file does not exist, script creates file and copies file attributes and ownership (with 10 seconds timeout)
 7. Then script tries to copy it chunk by chunk with dd; blocksize and count are specified in the code (e.g., by 1Mb = 4096 blocksize x 256 count). For example, if file size is 10Mb, dd will be runned 10 times.
