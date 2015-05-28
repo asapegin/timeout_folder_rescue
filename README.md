@@ -1,5 +1,7 @@
 # timeout_folder_rescue
 
+<h2>NO GUARANTEE. USE IT "AS IS", WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND</h2>
+
 <h3>Description</h3>
 
 Bash script, that copies contents of source folder to the destination folder file by file. If copying process for single file hangs for more than 10 seconds, script skips this file and logs its name. If destination file already exists, script skips file without logging its name. Folder structure is recreated according to source tree, however, no files or folders are deleted or overwritten in destination.
