@@ -19,4 +19,4 @@ I have an encrypted drive, which seems to be duying. If I try to copy files from
 
 <h3>Usage</h3>
 
-$ copy.sh <source_folder> <destination_folder> <log_file>
+$ copy.sh absolute_path_to_source_folder absolute_path_to_destination_folder log_file
