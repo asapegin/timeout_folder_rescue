@@ -43,7 +43,7 @@ function copyfile {
     log=$3
     blocks_read=0
     # create destination file
-    touch $destfile
+    touch -r "$sourcefile" "$destfile"
     timeout 10 chmod --reference="$sourcefile" "$destfile"
     timeout 10 chown --reference="$sourcefile" "$destfile"
     # check the size of source file in bytes
@@ -52,16 +52,16 @@ function copyfile {
     while [ "$((blocks_read*blocksize))" -lt "$filesize" ]
     do
 	# copy 4096 bytes to destination file with timeout of 10 seconds, symlinks not followed
-	timeout 10 dd if=$sourcefile iflag=nofollow bs=$blocksize count=$count skip=$blocks_read >> $destfile
+	timeout 10 dd if="$sourcefile" iflag=nofollow bs=$blocksize count=$count skip=$blocks_read >> "$destfile"
 	# check the status after command is finished
 	status=$?
 	# if command was killed by timeout or dd returned error (I/O error)
 	if [[ ("$status" -eq 124 ) || ("$status" -eq 1) ]]
 	then
 	    # delete destination file
-	    rm -f $destfile
+	    rm -f "$destfile"
 	    # log path to the source file into log
-	    echo $destfile >> $log
+	    echo "$destfile" >> $log
 	    # exit function
 	    return
 	fi
@@ -115,7 +115,7 @@ logfile=$3
 
 # go to source folder
 currentdir=`pwd`
-cd $csource
+cd "$csource"
 
 # create a file tree
 filetree="tree.txt"
@@ -126,10 +126,10 @@ do
     filetree+=".txt"
 done
 # create tree and save it to the file
-tree -n -a -f -i -o $cdestination/$filetree .
+tree -n -a -f -i -o "$cdestination/$filetree" .
 
 # go back to the currentdir
-cd $currentdir
+cd "$currentdir"
 
 # copy files from tree one by one
 while read line
@@ -141,29 +141,37 @@ do
     # delete "." in the beginning of filename (from tree)
     dfile=$cdestination${line:1}
     # If destination directory NOT exists
-    if [ ! -e "$(dirname $dfile)" ]; then
+    if [ ! -e "$(dirname "$dfile")" ]; then
 	# create directory
-	mkdir $(dirname $dfile)
-	timeout 10 chown --reference="$(dirname $sfile)" "$(dirname $dfile)"
-	timeout 10 chmod --reference="$(dirname $sfile)" "$(dirname $dfile)"
+	mkdir "$(dirname "$dfile")"
+	timeout 10 chown --reference="$(dirname "$sfile")" "$(dirname "$dfile")"
+	timeout 10 chmod --reference="$(dirname "$sfile")" "$(dirname "$dfile")"
+	timeout 10 touch --reference="$(dirname "$sfile")" "$(dirname "$dfile")"
     fi
     # If destination file NOT exists
     if [ ! -e "$dfile" ]; then
-	# if source file is actually a directory, create a directory
+	# if source file is actually a directory
 	if [ -d "$sfile" ]; then
-	    mkdir $dfile
-	    timeout 10 chown --reference="$sfile" "$dfile"
-	    timeout 10 chmod --reference="$sfile" "$dfile"
+	    # if it is a symlink to another directory, copy it
+	    if [[ -L "$file" ]]; then 
+		cp -r -p -d "$sfile" "$(dirname "$dfile")"
+	    # if not - create a directory
+	    else
+		mkdir "$dfile"
+		timeout 10 chown --reference="$sfile" "$dfile"
+		timeout 10 chmod --reference="$sfile" "$dfile"
+		timeout 10 touch --reference="$sfile" "$dfile"
+	    fi
         # otherwise copy file
 	else
 	    # copy file with timeout
-	    copyfile $sfile $dfile $logfile
+	    copyfile "$sfile" "$dfile" "$logfile"
 	fi
     fi
 done < <(head -n -2 ${cdestination}/${filetree})
 
 # delete the file tree
-rm -f $cdestination/$filetree
+rm -f "$cdestination/$filetree"
 
 # Report stats
 if [ -e "$logfile" ]
