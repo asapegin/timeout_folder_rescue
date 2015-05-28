@@ -16,10 +16,10 @@ I have an encrypted drive, which seems to be failing. If I try to copy files fro
 2. If the path to file does not exist in destination, it will be created.
 4. Folder attributes and ownership information are copied as well (with 10 seconds timeout).
 5. If file already exists, nothing is done, script skips the file
-6. If the file does not exist, script creates file and copies file attributes and ownership (with 10 seconds timeout)
-7. Then script tries to copy it chunk by chunk with dd; blocksize and count are specified in the code (e.g., by 1Mb = 4096 blocksize x 256 count). For example, if file size is 10Mb, dd will be runned 10 times.
-8. Each dd operation has a timeout of 10 seconds. I.e., dd has 10 seconds to copy each 1Mb chunk.
-9. If any of dd operation for specific file is killed due to timeout, or dd returns input/output error, script deletes destination file, logs an error and skips the file.
+6. If the file does not exist, script tries to copy it chunk by chunk with dd; blocksize and count are specified in the code (e.g., by 1Mb = 4096 blocksize x 256 count). For example, if file size is 10Mb, dd will be runned 10 times.
+7. Each dd operation has a timeout of 10 seconds. I.e., dd has 10 seconds to copy each 1Mb chunk.
+8. If any of dd operation for specific file is killed due to timeout, or dd returns input/output error, script deletes destination file, logs an error and skips the file.
+9. If file was copied without an error, script copies file attributes and ownership (with 10 seconds timeout).
 
 <h3>Usage</h3>
 
