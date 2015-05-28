@@ -55,8 +55,8 @@ function copyfile {
 	timeout 10 dd if=$sourcefile iflag=nofollow bs=$blocksize count=$count skip=$blocks_read >> $destfile
 	# check the status after command is finished
 	status=$?
-	# if command waws killed by timeout
-	if [ "$status" -eq 124 ]
+	# if command was killed by timeout or dd returned error (I/O error)
+	if [[ ("$status" -eq 124 ) || ("$status" -eq 1) ]]
 	then
 	    # delete destination file
 	    rm -f $destfile
@@ -86,7 +86,7 @@ function print_help {
 # to the destination folder
 
 # print help if number of arguments is not 3 or help was requested
-if [[  ($# -ne 3) || ($# == "-h") || ( $# == "--help") ]]
+if [[ ($# -ne 3) || ($# == "-h") || ( $# == "--help") ]]
 then
     print_help
     exit
