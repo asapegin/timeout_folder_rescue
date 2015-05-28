@@ -94,7 +94,7 @@ fi
 
 #source
 # delete the slash at the end of directory path if present
-if [ 'echo ${1:-1}'=="/" ]
+if [ "${1: -1}" == "/" ]
 then
     csource=${1::-1}
 else
@@ -103,7 +103,7 @@ fi
 
 #destination
 # delete the slash at the end of directory path if present
-if [ 'echo ${2:-1}'=="/" ]
+if [ "${2: -1}" == "/" ]
 then
     cdestination=${2::-1}
 else
