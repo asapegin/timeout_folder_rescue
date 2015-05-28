@@ -42,10 +42,6 @@ function copyfile {
     destfile=$2
     log=$3
     blocks_read=0
-    # create destination file
-    touch -r "$sourcefile" "$destfile"
-    timeout 10 chmod --reference="$sourcefile" "$destfile"
-    timeout 10 chown --reference="$sourcefile" "$destfile"
     # check the size of source file in bytes
     filesize=$(stat -c%s "$sourcefile")
     # copy until all bytes of file are not copied
@@ -68,6 +64,10 @@ function copyfile {
 	# update number of bytes copied
 	blocks_read=$((blocks_read+count))
     done
+    # copy attributes
+    timeout 10 touch -r "$sourcefile" "$destfile"
+    timeout 10 chmod --reference="$sourcefile" "$destfile"
+    timeout 10 chown --reference="$sourcefile" "$destfile"
 }
 
 # Function prints help
@@ -126,7 +126,8 @@ do
     filetree+=".txt"
 done
 # create tree and save it to the file
-tree -n -a -f -i -o "$cdestination/$filetree" .
+tree -n -a -f -i --noreport -o "$cdestination/$filetree" .
+sed -i 's/\ ->\ .*//' "$cdestination/$filetree"
 
 # go back to the currentdir
 cd "$currentdir"
@@ -153,7 +154,7 @@ do
 	# if source file is actually a directory
 	if [ -d "$sfile" ]; then
 	    # if it is a symlink to another directory, copy it
-	    if [[ -L "$file" ]]; then 
+	    if [[ -L "$sfile" ]]; then 
 		cp -r -p -d "$sfile" "$(dirname "$dfile")"
 	    # if not - create a directory
 	    else
@@ -168,7 +169,7 @@ do
 	    copyfile "$sfile" "$dfile" "$logfile"
 	fi
     fi
-done < <(head -n -2 ${cdestination}/${filetree})
+done < "$cdestination/$filetree"
 
 # delete the file tree
 rm -f "$cdestination/$filetree"
