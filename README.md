@@ -1,6 +1,6 @@
 # timeout_folder_rescue
 
-<h2>NO GUARANTEE:</h2><h3>Use it "as is", without warranties or conditions of any kind.</h3>
+<h3>NO GUARANTEE: use it "as is", without warranties or conditions of any kind.</h3>
 
 <h3>Description</h3>
 
