@@ -10,6 +10,12 @@ Bash script, that copies contents of source folder to the destination folder fil
 
 I have an encrypted drive, which seems to be failing. If I try to copy files from the mounted encrypted volume, some files are copied just well, but for some other files copy process lasts forever. E.g., Midnight Commander shows that copy is "stalled". Probably because this is encrypted volume, sometimes no I/O error is reported. Of course, one could skip such files manually, but since the drive contains a lot of files, this takes forever as well. This script does it automatically.
 
+<h3>Hint</h3>
+
+In most cases, you do not need this script. Usually, 'cp -r -p -n -d source/. destination/' will do the trick for you (please read cp man for details on parameters). However, cp does not show any progress.
+
+After cp, you could run rsync to try to read problematic files, e.g. 'rsync -vruzlpEXog --progress source/ destination/'. Please also read rsync man for details on parameters.
+
 <h3>How script works in more details</h3>
 
 1. Script builds a tree for source folder and iterates for each line in the 'tree' output.
