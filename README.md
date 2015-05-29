@@ -14,7 +14,9 @@ I have an encrypted drive, which seems to be failing. If I try to copy files fro
 
 In most cases, you do not need this script. Usually, 'cp -v -r -p -n -d source/. destination/' will do the trick for you (please read cp man for details on parameters). However, cp does not show any progress.
 
-After cp, you could run rsync to try to read problematic files, e.g. 'rsync -vruzlpEXog --progress source/ destination/'. Please also read rsync man for details on parameters.
+Alternatively, you could you rsync with timeout: rsync -vruzlpEXog --progress source/ destination/
+
+After cp or rsync with timeout, you could run rsync without timeout to try to read problematic files, e.g. 'rsync -vruzlpEXog --progress source/ destination/'. Please also read rsync man for details on parameters.
 
 Differnt to cp, this script reports the speed of copy process (thanks to dd), but for each chunks of file only, not for the whole file or folder. 
 
