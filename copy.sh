@@ -44,6 +44,7 @@ function copyfile {
     blocks_read=0
     # check the size of source file in bytes
     filesize=$(stat -c%s "$sourcefile")
+    echo "Copy of $sourcefile to $destfile started:"
     # copy until all bytes of file are not copied
     while [ "$((blocks_read*blocksize))" -lt "$filesize" ]
     do
@@ -58,6 +59,7 @@ function copyfile {
 	    rm -f "$destfile"
 	    # log path to the source file into log
 	    echo "$destfile" >> $log
+	    echo "Copy of $sourcefile to $destfile aborted. File skipped."
 	    # exit function
 	    return
 	fi
@@ -68,6 +70,7 @@ function copyfile {
     timeout 10 touch -r "$sourcefile" "$destfile"
     timeout 10 chmod --reference="$sourcefile" "$destfile"
     timeout 10 chown --reference="$sourcefile" "$destfile"
+    echo "Copy of $sourcefile to $destfile finished"
 }
 
 # Function prints help
@@ -176,7 +179,7 @@ rm -f "$cdestination/$filetree"
 # Report stats
 if [ -e "$logfile" ]
 then
-    failes=`wc -l "$logfile"`
+    failes=`wc -l "$logfile" | cut -d ' ' -f 1`
 else
     failes=0
 fi
